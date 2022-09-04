@@ -13,6 +13,7 @@ namespace ATMService.Model
         Random rnd = new Random();
         public List<BankAccount> BankAccounts = new List<BankAccount>();
         public List<BankCard> BankCards = new List<BankCard>();
+        public BankCard LoggedBankCard = null;
         public BankAccount LoggedBankAccount = null;
 
         public void Initialization()
@@ -30,7 +31,7 @@ namespace ATMService.Model
             Console.WriteLine("n. Create a new bank account");
             for (int i = 0; i < BankAccounts.Count; i++)
             {
-                Console.WriteLine("{0}. Insert bank card of {1}.", i, BankCards[i].Owner);
+                Console.WriteLine("{0}. Insert bank card of {1}.", i, BankAccounts[i].Owner);
             }
             Console.WriteLine("\nEnter any other key to insert a random RFID card.\n");
             return Console.ReadLine();
@@ -71,6 +72,7 @@ namespace ATMService.Model
                 {
                     if (BankCards[number].AccountNumber == account.AccountNumber)
                     {
+                        LoggedBankCard = BankCards[number];
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Matching bank account has been identified.");
                         Console.ResetColor();
@@ -239,7 +241,27 @@ namespace ATMService.Model
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("You are being logged out of the system.\n\n");
             Console.ResetColor();
+            LoggedBankCard = null;
             LoggedBankAccount = null;
+        }
+
+        public void Delete()
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("YOU ARE ABOUT TO DELETE YOUR BANK ACCOUNT FROM THE DATABASE!");
+            Console.WriteLine("PLEASE VALIDATE BY ENTERING YOUR PIN: ");
+            Console.ResetColor();
+            var input = Console.ReadLine();
+            if(input == LoggedBankCard.Pin)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("ACCOUNT HAS BEEN SUCCESSFULLY DELETED. YOU WILL BE LOGGED OUT OF THE SYSTEM.");
+                Console.ResetColor();
+                BankAccounts.Remove(LoggedBankAccount);
+                BankCards.Remove(LoggedBankCard);
+                LoggedBankAccount = null;
+                LoggedBankCard = null;
+            }
         }
     }
 }

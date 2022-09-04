@@ -52,6 +52,7 @@ namespace ATMService
                         MyATM.PrintStatement();
                         break;
                     case "delete":
+                        MyATM.Delete();
                         break;
                     default:
                         MyATM.Logout();
